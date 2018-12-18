@@ -1,0 +1,41 @@
+#!/bin/bash
+
+: ' This script list directories on PATH variable.
+
+If -f flags is activated, then recive
+an argument wich is a directory and check if that directory is in PATH.
+
+Also if -a flags is activated, then search hidden files on PATH directories
+
+Also if -r flags is activated, then search recursive on PATH directories
+
+made by: JT
+'
+while getopts "f:ar" opt
+do
+	case $opt in
+		f ) if result=$(echo $PATH | tr ':' '\n' | grep $OPTARG)
+			then
+				echo "Has found the following directories:"
+				echo $result
+		     else
+ 		     echo "No match found"
+	            fi;;
+		a ) echo $PATH | tr ':' '\n' | xargs ls -a | less;;
+
+		# Inspect PATH variable, then translate : to line breaks
+		#After uses xargs to enable the ls estandar input trough pipes
+		#and list these directories, finally, use less to controlate the ouput
+		#and allow read
+
+
+		r ) echo $PATH | tr ':' '\n' | xargs ls -R | less;;
+        esac
+done
+#shift $(($OPTIND -1))
+
+#If doesnt have argument, excute by default:
+
+if (( $OPTIND == 1 )); then
+   echo $PATH | tr ':' '\n' | xargs ls -R | less;
+fi
